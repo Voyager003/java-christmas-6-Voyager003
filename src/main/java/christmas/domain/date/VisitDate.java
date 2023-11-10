@@ -2,15 +2,18 @@ package christmas.domain.date;
 
 import christmas.util.StringConverter;
 
+import java.util.Arrays;
 
 public class VisitDate {
 
     private final int visitDate;
+    private final Week week;
 
     public VisitDate(String input) {
         int dateInput = StringConverter.convertToInt(input);
         validateVisitDate(dateInput);
         this.visitDate = dateInput;
+        this.week = getDayOfWeekFromVisitDate(dateInput);
     }
 
     private void validateVisitDate(int visitDate) {
@@ -19,7 +22,19 @@ public class VisitDate {
         }
     }
 
+    private Week getDayOfWeekFromVisitDate(int visitDate) {
+        int dayIndex = visitDate % 7;
+        return Arrays.stream(Week.values())
+                .filter(week -> week.getIndex() == dayIndex)
+                .findFirst()
+                .orElse(Week.THURSDAY);
+    }
+
     public int getVisitDate() {
         return visitDate;
+    }
+
+    public Week getWeek() {
+        return week;
     }
 }
