@@ -17,7 +17,7 @@
 
 ---
 
-## 기능 목록
+### 기능 목록
 
 1. 프로그램 흐름
 
@@ -38,30 +38,49 @@
 - 총 혜택 금액을 계산
 - 할인 후의 예상 결제 금액을 계산
 
+2. 프로젝트 구조
 
-2. 도메인 설계
+- Config
+  - 애플리케이션 시작 시, MenuRepository에 메뉴 정보를 등록
 
-- 방문 날짜 (VisitDate)
-  - 일(Day)
-  - 요일(DayOfWeek)
-- 주문한 메뉴 (key:주문 메뉴, value:갯수)
-- 주문 메뉴 
-  - 에피타이저, 메인디쉬, 디저트, 음료
-- 주문 금액 (OrderAmount)
-- Discount Policy (할인 정책)
-  - 크리스마스 디데이 할인 
-  - 평일 할인
-  - 주말 할인
-  - 특별 할인
-- 이벤트
-  - 증정 이벤트
-  - 이벤트 배지
+- Controller
+  - Planner: 프로그램 전체 흐름을 제어 
 
-3. UI
+- Domain
+  - Order(주문 정보)
+    - VisitDate: 방문 날짜
+      - visitDate: 방문 날짜(일) 
+      - Weekday: 요일(enum)
+    - Map<Menu, Integer>: 주문 메뉴와 주문 수량
+      - Menu: 메뉴
+        - 애피타이저, 메인, 디저트, 음료(enum)
+    - OrderAmount: 주문 금액
+  - DiscountPolicy: 할인 정책
+    - 크리스마스 디데이 할인 
+    - 평일 할인
+    - 특별 할인
+  - Event: 이벤트
+    - 증정 이벤트
+    - 이벤트 배지
 
-- InputView: 입력하는 책임을 가진 클래스
-- OutputView: 출력하는 책임을 가진 클래스
+- Service
+  - OrderService
+    - 주문 정보 생성
+    - 할인 정책 적용
+    - 이벤트 적용
+  - MenuService
+    - 메뉴 등록 
+    - 메뉴 조회
 
-4. util
+- Dao
+  - OrderRepository: 주문 정보를 저장
+  - MenuRepository: 메뉴 정보를 저장
 
-- StringConverter: 문자열을 원하는 타입으로 변환
+- Util
+  - StringConverter: 문자열을 원하는 타입으로 변환
+    - convertToInt: 문자열을 정수로 변환
+    - convertToMap: 문자열 입력을 Map으로 변환
+
+- View
+  - InputView: 입력을 담당
+  - OutputView: 출력을 담당
