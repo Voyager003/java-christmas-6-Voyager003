@@ -1,22 +1,20 @@
 package christmas.domain;
 
 
+import christmas.domain.menu.Menu;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class SelectionMenu {
 
-    private final Map<String, Integer> selectionMenu = new HashMap<>();
+    private final Map<Menu, Integer> selectionMenu = new HashMap<>();
 
-    public void saveMenu(String menuName, int quantity) {
+    public void saveMenu(Menu menuName, int quantity) {
         selectionMenu.put(menuName, quantity);
     }
 
-    public void findByName(String menuName) {
-        selectionMenu.get(menuName);
-    }
-
-    public Map<String, Integer> getSelectionMenu() {
+    public Map<Menu, Integer> getSelectionMenu() {
         return selectionMenu;
     }
 }
