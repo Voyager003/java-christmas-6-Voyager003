@@ -1,6 +1,7 @@
 package christmas.config;
 
 
+import christmas.dao.MenuRepository;
 import christmas.service.MenuService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class PlannerConfigTest {
          * when : initializeMenu() 호출한다.
          * then : 모든 메뉴의 개수는 12개로, 예상되는 메뉴의 개수는 12개이다.
          */
-        MenuService menuService = new MenuService();
+        MenuService menuService = new MenuService(MenuRepository.getInstance());
         PlannerConfig plannerConfig = new PlannerConfig(menuService);
 
         menuService.getMenuSize();

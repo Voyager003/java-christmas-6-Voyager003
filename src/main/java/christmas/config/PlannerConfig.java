@@ -1,6 +1,7 @@
 package christmas.config;
 
 
+import christmas.dao.MenuRepository;
 import christmas.domain.menu.Appetizer;
 import christmas.domain.menu.Beverage;
 import christmas.domain.menu.Dessert;
@@ -14,7 +15,7 @@ public class PlannerConfig {
     private final MenuService menuService;
 
     public PlannerConfig(MenuService menuService) {
-        this.menuService = menuService;
+        this.menuService = new MenuService(MenuRepository.getInstance());
         initializeMenu();
     }
 

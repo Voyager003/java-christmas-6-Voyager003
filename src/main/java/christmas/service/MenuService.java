@@ -7,7 +7,11 @@ import java.util.Map;
 
 public class MenuService {
 
-    private final MenuRepository menuRepository = new MenuRepository();
+    private final MenuRepository menuRepository;
+
+    public MenuService(MenuRepository menuRepository) {
+        this.menuRepository = menuRepository;
+    }
 
     public void saveMenu(Menu menuCategory) {
         menuRepository.saveMenu(menuCategory);

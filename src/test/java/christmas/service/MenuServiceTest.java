@@ -1,5 +1,6 @@
 package christmas.service;
 
+import christmas.dao.MenuRepository;
 import christmas.domain.menu.Menu;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class MenuServiceTest {
 
-    MenuService menuService = new MenuService();
+    MenuService menuService = new MenuService(MenuRepository.getInstance());
 
     @Test
     @DisplayName("메뉴를 저장하는 기능을 테스트한다.")
