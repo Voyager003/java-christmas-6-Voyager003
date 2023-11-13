@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import static christmas.domain.menu.Dessert.CHOCOLATE_CAKE;
 import static christmas.domain.menu.MainDish.SEAFOOD_PASTA;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BenefitTest {
 
@@ -89,5 +90,61 @@ class BenefitTest {
         int expectedDiscount = 6246;
 
         assertEquals(expectedDiscount, discount);
+    }
+
+    @Test
+    @DisplayName("스타 뱃지를 부여하는 지 테스트한다.")
+    void grantBadge_star() {
+        /**
+         * given : 메뉴를 주문한다.
+         * when : 할인 정책을 적용한다.
+         * then : 예상되는 할인액은 6246원으로 STAR 뱃지를 부여한다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(SEAFOOD_PASTA, 4);
+        selectionMenu.saveMenu(CHOCOLATE_CAKE, 2);
+        VisitDate visitDate = new VisitDate("13");
+        Order order = new Order(visitDate, selectionMenu);
+        Benefit benefit = new Benefit(order);
+
+        Badge badge = benefit.getBadge();
+        assertThat(badge).isEqualTo(Badge.STAR);
+    }
+
+    @Test
+    @DisplayName("뱃지를 부여하지 않는 케이스를 테스트한다.")
+    void grantBadge_none() {
+        /**
+         * given : 메뉴를 주문한다.
+         * when : 할인 정책을 적용한다.
+         * then : 예상되는 할인액은 1100원으로 부여되는 뱃지는 없다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(CHOCOLATE_CAKE, 1);
+        VisitDate visitDate = new VisitDate("2");
+        Order order = new Order(visitDate, selectionMenu);
+        Benefit benefit = new Benefit(order);
+
+        Badge badge = benefit.getBadge();
+        assertThat(badge).isEqualTo(Badge.NONE);
+    }
+
+    @Test
+    @DisplayName("산타 뱃지를 부여하는 지 테스트한다.")
+    void grantBadge_santa() {
+        /**
+         * given : 메뉴를 주문한다.
+         * when : 할인 정책을 적용한다.
+         * then : 예상되는 할인액은 22430원으로 SANTA 뱃지를 부여한다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(SEAFOOD_PASTA, 4);
+        selectionMenu.saveMenu(CHOCOLATE_CAKE, 10);
+        VisitDate visitDate = new VisitDate("13");
+        Order order = new Order(visitDate, selectionMenu);
+        Benefit benefit = new Benefit(order);
+
+        Badge badge = benefit.getBadge();
+        assertThat(badge).isEqualTo(Badge.SANTA);
     }
 }

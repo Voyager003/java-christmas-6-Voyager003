@@ -6,11 +6,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Benefit {
-    private int benefitAmount;
     private Map<String, Integer> benefits = new HashMap<>();
+    private Badge badge;
 
     public Benefit(Order order) {
         calculateBenefitAmount(order);
+        badge = grantBadge();
+    }
+
+    public int getTotalBenefitAmount() {
+        return benefits.values().stream()
+                .mapToInt(Integer::intValue)
+                .sum();
     }
 
     public void calculateBenefitAmount(Order order) {
@@ -20,10 +27,18 @@ public class Benefit {
         benefits.put("특별 할인", getSpecialDiscount(order));
     }
 
-    public int getTotalBenefitAmount() {
-        return benefits.values().stream()
-                .mapToInt(Integer::intValue)
-                .sum();
+    private Badge grantBadge() {
+        int benefitAmount = getTotalBenefitAmount();
+        if (benefitAmount >= Badge.SANTA.getPrice()) {
+            return Badge.SANTA;
+        }
+        if (benefitAmount >= Badge.TREE.getPrice()) {
+            return Badge.TREE;
+        }
+        if (benefitAmount >= Badge.STAR.getPrice()) {
+            return Badge.STAR;
+        }
+        return Badge.NONE;
     }
 
     private int getChristmasDiscount(Order order) {
