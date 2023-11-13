@@ -147,4 +147,23 @@ class BenefitTest {
         Badge badge = benefit.getBadge();
         assertThat(badge).isEqualTo(Badge.SANTA);
     }
+
+    @Test
+    @DisplayName("증정 메뉴 기능을 테스트한다.")
+    void grantGiftEvent_getTotalBenefit() {
+        /**
+         * given : 메뉴를 주문한다.
+         * when : 할인 정책을 적용한다.
+         * then : 할인이 적용되지 않았지만, 샴페인을 증정함으로 25000원이 추가된다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(CHOCOLATE_CAKE, 10);
+        VisitDate visitDate = new VisitDate("29");
+
+        Order order = new Order(visitDate, selectionMenu);
+        Benefit benefit = new Benefit(order);
+
+        int benefitAmount = benefit.getTotalBenefitAmount();
+        assertThat(benefitAmount).isEqualTo(25_000);
+    }
 }

@@ -5,7 +5,10 @@ import christmas.discount.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static christmas.domain.menu.Beverage.CHAMPAGNE;
+
 public class Benefit {
+    private static final int GIFT_EVENT_AMOUNT = 120_000;
     private Map<String, Integer> benefits = new HashMap<>();
     private Badge badge;
 
@@ -25,6 +28,20 @@ public class Benefit {
         benefits.put("평일 할인", getWeekdayDiscount(order));
         benefits.put("주말 할인", getWeekendDiscount(order));
         benefits.put("특별 할인", getSpecialDiscount(order));
+        grantGiftEvent(order);
+    }
+
+    public int calculateTotalDiscount(Order order) {
+        int totalDiscount = getTotalBenefitAmount();
+        return (order.getOrderAmount() - totalDiscount);
+    }
+
+    private void grantGiftEvent(Order order) {
+        int eventBenefit = 0;
+        if (order.getOrderAmount() >= GIFT_EVENT_AMOUNT) {
+            eventBenefit = CHAMPAGNE.getPrice();
+        }
+        benefits.put("증정 이벤트", eventBenefit);
     }
 
     private Badge grantBadge() {
