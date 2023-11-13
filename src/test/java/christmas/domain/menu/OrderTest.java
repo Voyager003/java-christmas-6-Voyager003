@@ -1,6 +1,10 @@
 package christmas.domain.menu;
 
+import christmas.discount.ChristmasDiscountPolicy;
+import christmas.discount.DiscountPolicy;
+import christmas.domain.Order;
 import christmas.domain.SelectionMenu;
+import christmas.domain.date.VisitDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +13,7 @@ import java.util.Map;
 import static christmas.domain.menu.Beverage.RED_WINE;
 import static christmas.domain.menu.MainDish.SEAFOOD_PASTA;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class OrderTest {
@@ -36,5 +41,23 @@ class OrderTest {
         }
 
         assertThat(orderAmount).isEqualTo(155_000);
+    }
+
+    @Test
+    @DisplayName("크리스마스 할인이 적용되는지 확인한다.")
+    void getChristmasDiscount() {
+        /**
+         * given : 방문 날짜로 5일이 주어진다.
+         * when : 크리스마스 할인 정책을 적용한다.
+         * then : 적용될 할인 금액은 1400원이다.
+         */
+        VisitDate visitDate = new VisitDate("5");
+        SelectionMenu selectionMenu = new SelectionMenu();
+        Order order = new Order(visitDate, selectionMenu);
+
+        int discount = order.getChristmasDiscount();
+        int expectedDiscount = 1_400;
+
+        assertEquals(expectedDiscount, discount);
     }
 }
