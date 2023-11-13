@@ -45,4 +45,9 @@ public class VisitDate {
     public Week getWeek() {
         return week;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(visitDate);
+    }
 }
