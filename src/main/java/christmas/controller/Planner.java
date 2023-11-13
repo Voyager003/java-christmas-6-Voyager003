@@ -5,6 +5,7 @@ import christmas.dao.MenuRepository;
 import christmas.domain.Order;
 import christmas.domain.SelectionMenu;
 import christmas.domain.date.VisitDate;
+import christmas.domain.menu.Menu;
 import christmas.service.MenuService;
 import christmas.service.SelectionMenuService;
 import christmas.util.StringConverter;
@@ -12,6 +13,8 @@ import christmas.view.InputView;
 import christmas.view.OutputView;
 
 import java.util.HashMap;
+import java.util.Map;
+
 
 public class Planner {
     private final MenuService menuService = new MenuService(MenuRepository.getInstance());
@@ -19,7 +22,8 @@ public class Planner {
 
     public void start() {
         initPlanner();
-        generateOrder();
+        Order order = generateOrder();
+        printBeforeApplyBenefit(order);
     }
 
     private void initPlanner() {
@@ -52,5 +56,26 @@ public class Planner {
             System.out.println(e.getMessage());
             return getSelectionMenu();
         }
+    }
+
+    private void printBeforeApplyBenefit(Order order) {
+        OutputView.printMessageEvent(order);
+        printMenu(order);
+        printBeforeDiscount(order);
+    }
+
+    private void printMenu(Order order) {
+        OutputView.printMenuHeader();
+        Map<Menu, Integer> selectionMenu = order.getSelectionMenu().getSelectionMenu();
+        for (Map.Entry<Menu, Integer> entry : selectionMenu.entrySet()) {
+            Menu menu = entry.getKey();
+            int count = entry.getValue();
+            OutputView.printMenu(menu.getName(), count);
+        }
+    }
+
+    private void printBeforeDiscount(Order order) {
+        int orderAmount = order.getOrderAmount();
+        OutputView.printBeforeDiscount(orderAmount);
     }
 }
