@@ -1,5 +1,6 @@
 package christmas.domain;
 
+import christmas.discount.DiscountPolicy;
 import christmas.domain.date.VisitDate;
 import christmas.domain.menu.Menu;
 
@@ -11,6 +12,9 @@ public class Order {
     final VisitDate visitDate;
     final SelectionMenu selectionMenu;
     int orderAmount;
+    int estimatedAmount;
+    Badge badge;
+    DiscountPolicy discountPolicy;
 
     public Order(VisitDate visitDate, SelectionMenu selectionMenu) {
         this.visitDate = visitDate;
