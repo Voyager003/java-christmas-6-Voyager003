@@ -1,7 +1,5 @@
 package christmas.domain.menu;
 
-import christmas.discount.ChristmasDiscountPolicy;
-import christmas.discount.DiscountPolicy;
 import christmas.domain.Order;
 import christmas.domain.SelectionMenu;
 import christmas.domain.date.VisitDate;
@@ -11,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static christmas.domain.menu.Beverage.RED_WINE;
+import static christmas.domain.menu.Dessert.CHOCOLATE_CAKE;
 import static christmas.domain.menu.MainDish.SEAFOOD_PASTA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,6 +56,65 @@ class OrderTest {
 
         int discount = order.getChristmasDiscount();
         int expectedDiscount = 1_400;
+
+        assertEquals(expectedDiscount, discount);
+    }
+
+    @Test
+    @DisplayName("평일이 아니면서 디저트가 없는 경우를 테스트한다.")
+    void getWeekdayDiscount_noDessert() {
+        /**
+         * given : 파스타와 초콜릿 케이크, 1일(금요일)이 주어진다.
+         * when : 할인 정책을 적용한다.
+         * then : 할인이 적용되지 않아 0원을 반환한다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(SEAFOOD_PASTA, 3);
+        VisitDate visitDate = new VisitDate("1");
+        Order order = new Order(visitDate, selectionMenu);
+
+        int discount = order.getWeekdayDiscount();
+        int expectedDiscount = 0;
+
+        assertEquals(expectedDiscount, discount);
+    }
+
+    @Test
+    @DisplayName("평일이면서 디저트가 하나 포함되어 있는 경우를 테스트한다.")
+    void getWeekdayDiscount_hasDessert_caseOne() {
+        /**
+         * given : 파스타와 초콜릿 케이크, 5일(화요일)이 주어진다.
+         * when : 할인 정책을 적용한다.
+         * then : 디저트 메뉴가 두개로 4046원을 반환한다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(SEAFOOD_PASTA, 3);
+        selectionMenu.saveMenu(CHOCOLATE_CAKE, 2);
+        VisitDate visitDate = new VisitDate("5");
+        Order order = new Order(visitDate, selectionMenu);
+
+        int discount = order.getWeekdayDiscount();
+        int expectedDiscount = 4046;
+
+        assertEquals(expectedDiscount, discount);
+    }
+
+    @Test
+    @DisplayName("평일이 아닌데 디저트가 포함되어 있는 경우를 테스트한다.")
+    void getWeekdayDiscount_hasDessert_caseTwo() {
+        /**
+         * given : 파스타와 초콜릿 케이크, 23일(토요일)이 주어진다.
+         * when : 할인 정책을 적용한다.
+         * then : 디저트 메뉴가 포함되어있지만, 평일이기 때문에 0원을 반환한다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(SEAFOOD_PASTA, 3);
+        selectionMenu.saveMenu(CHOCOLATE_CAKE, 2);
+        VisitDate visitDate = new VisitDate("23");
+        Order order = new Order(visitDate, selectionMenu);
+
+        int discount = order.getWeekdayDiscount();
+        int expectedDiscount = 0;
 
         assertEquals(expectedDiscount, discount);
     }

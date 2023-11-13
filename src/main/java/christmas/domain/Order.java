@@ -2,6 +2,7 @@ package christmas.domain;
 
 import christmas.discount.ChristmasDiscountPolicy;
 import christmas.discount.DiscountPolicy;
+import christmas.discount.WeekdayDiscountPolicy;
 import christmas.domain.date.VisitDate;
 import christmas.domain.menu.Menu;
 
@@ -32,6 +33,11 @@ public class Order {
 
     public int getChristmasDiscount() {
         discountPolicy = new ChristmasDiscountPolicy();
+        return discountPolicy.discount(this);
+    }
+
+    public int getWeekdayDiscount() {
+        discountPolicy = new WeekdayDiscountPolicy();
         return discountPolicy.discount(this);
     }
 
