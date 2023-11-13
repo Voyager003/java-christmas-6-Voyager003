@@ -10,8 +10,7 @@ import java.util.Map;
 public class WeekdayDiscountPolicy implements DiscountPolicy {
 
     private static final int DISCOUNT_PER_DESSERT = 2023;
-    private int dessertCount;
-    private int discountAmount;
+    int dessertCount;
 
     @Override
     public int discount(Order order) {
@@ -27,7 +26,6 @@ public class WeekdayDiscountPolicy implements DiscountPolicy {
     }
 
     private int containDessert(Map<Menu, Integer> selectionMenu) {
-        int dessertCount = 0;
         for (Map.Entry<Menu, Integer> entry : selectionMenu.entrySet()) {
             Menu menu = entry.getKey();
             if (menu instanceof Dessert) {
@@ -35,10 +33,5 @@ public class WeekdayDiscountPolicy implements DiscountPolicy {
             }
         }
         return dessertCount;
-    }
-
-    @Override
-    public String toString() {
-        return discountAmount + "원";
     }
 }

@@ -1,9 +1,8 @@
 package christmas.view;
 
+import christmas.domain.Badge;
 import christmas.domain.Benefit;
-import christmas.domain.Order;
 
-import java.util.List;
 import java.util.Map;
 
 public class OutputView {
@@ -39,15 +38,16 @@ public class OutputView {
         System.out.println(orderAmount + "원");
     }
 
-    public static void printHasGift() {
+    public static void printGift(Benefit benefit) {
         System.out.println("<증정 메뉴>");
-        System.out.println("샴페인 1개");
+        Map<String, Integer> benefits = benefit.getBenefits();
+        String giftMenu = MESSAGE_NOTHING;
+        if (benefits.get("증정 이벤트") > 0) {
+            giftMenu = "샴페인 1개";
+        }
+        System.out.println(giftMenu);
     }
 
-    public static void printNoGift() {
-        System.out.println("<증정 메뉴>");
-        System.out.println("없음");
-    }
 
     public static void printBenefitDetail(Benefit benefit) {
         System.out.println("<혜택 내역>");
@@ -61,20 +61,24 @@ public class OutputView {
             }
         }
         if (!hasBenefit) {
-            System.out.println("없음");
+            System.out.println(MESSAGE_NOTHING);
         }
     }
 
-
-    public static void printTotalDetail() {
+    public static void printTotalDetail(Benefit benefit) {
         System.out.println("<총혜택 금액>");
+        int amount = benefit.getTotalBenefitAmount();
+        System.out.println("-" + amount + "원");
     }
 
-    public static void printAfterDiscount() {
+    public static void printAfterDiscount(int totalDiscountAmount) {
         System.out.println("<할인 후 예상 결제 금액>");
+        System.out.println(totalDiscountAmount + "원");
     }
 
-    public static void printEventBadge() {
-        System.out.println("산타");
+    public static void printEventBadge(Benefit benefit) {
+        System.out.println("<12월 이벤트 배지>");
+        Badge badge = benefit.getBadge();
+        System.out.println(badge.toString());
     }
 }
