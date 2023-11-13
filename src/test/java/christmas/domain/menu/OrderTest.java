@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import static christmas.domain.menu.Beverage.CHAMPAGNE;
 import static christmas.domain.menu.Beverage.RED_WINE;
 import static christmas.domain.menu.Dessert.CHOCOLATE_CAKE;
 import static christmas.domain.menu.MainDish.SEAFOOD_PASTA;
@@ -114,6 +115,66 @@ class OrderTest {
         Order order = new Order(visitDate, selectionMenu);
 
         int discount = order.getWeekdayDiscount();
+        int expectedDiscount = 0;
+
+        assertEquals(expectedDiscount, discount);
+    }
+
+    @Test
+    @DisplayName("주말이면서 메인디쉬가 포함된 경우 할인을 적용한다.")
+    void getWeekendDiscount_containMainDish_weekend() {
+        /**
+         * given : 주문 정보에 주말(1일 금요일), 메인디쉬가 포함된다.
+         * when : 할인 정책을 적용한다.
+         * then : 메인디쉬는 2개로 4046원을 반환한다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(SEAFOOD_PASTA, 2);
+        selectionMenu.saveMenu(CHOCOLATE_CAKE, 2);
+        VisitDate visitDate = new VisitDate("1");
+        Order order = new Order(visitDate, selectionMenu);
+
+        int discount = order.getWeekendDiscount();
+        int expectedDiscount = 4046;
+
+        assertEquals(expectedDiscount, discount);
+    }
+
+    @Test
+    @DisplayName("주말이 아니면서, 메인디쉬가 포함된 경우 할인을 적용하지 않는다.")
+    void getWeekendDiscount_containMainDish_weekDay() {
+        /**
+         * given : 주문 정보에 평일(4일 월요일), 메인디쉬가 포함된다.
+         * when : 할인 정책을 적용한다.
+         * then : 메인디쉬가 포함되어있어도 평일이기 때문에 적용하지 않는다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(SEAFOOD_PASTA, 2);
+        selectionMenu.saveMenu(CHOCOLATE_CAKE, 2);
+        VisitDate visitDate = new VisitDate("4");
+        Order order = new Order(visitDate, selectionMenu);
+
+        int discount = order.getWeekendDiscount();
+        int expectedDiscount = 0;
+
+        assertEquals(expectedDiscount, discount);
+    }
+
+    @Test
+    @DisplayName("주말이지만 메인디쉬가 포함되어 있지 않은 경우 할인을 적용하지 않는다.")
+    void getWeekendDiscount_notContainMainDish_weekend() {
+        /**
+         * given : 주문 정보에 주말(9일 토요일), 메인디쉬가 포함되지 않는다.
+         * when : 할인 정책을 적용한다.
+         * then : 메인디쉬가 없어 할인을 적용하지 않는다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(CHAMPAGNE, 2);
+        selectionMenu.saveMenu(CHOCOLATE_CAKE, 2);
+        VisitDate visitDate = new VisitDate("9");
+        Order order = new Order(visitDate, selectionMenu);
+
+        int discount = order.getWeekendDiscount();
         int expectedDiscount = 0;
 
         assertEquals(expectedDiscount, discount);
