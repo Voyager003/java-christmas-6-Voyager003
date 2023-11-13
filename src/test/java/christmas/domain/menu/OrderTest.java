@@ -179,4 +179,42 @@ class OrderTest {
 
         assertEquals(expectedDiscount, discount);
     }
+
+    @Test
+    @DisplayName("특별 할인 정책의 적용 여부를 테스트한다.")
+    void getSpecialDiscount_() {
+        /**
+         * given : 주문 정보와 방문 날짜(3일)가 주어진다.
+         * when : 할인 정책을 적용한다.
+         * then : 3일은 특별 할인 정책이 적용되어 1000원을 반환한다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(SEAFOOD_PASTA, 2);
+        VisitDate visitDate = new VisitDate("3");
+        Order order = new Order(visitDate, selectionMenu);
+
+        int discount = order.getSpecialDiscount();
+        int expectedDiscount = 1000;
+
+        assertEquals(expectedDiscount, discount);
+    }
+
+    @Test
+    @DisplayName("특별 할인 정책의 적용 여부를 테스트한다.")
+    void getSpecialDiscount() {
+        /**
+         * given : 주문 정보와 방문 날짜(5일)가 주어진다.
+         * when : 할인 정책을 적용한다.
+         * then : 5일은 특별할인에 포함되지 않아 0원을 반환한다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu();
+        selectionMenu.saveMenu(SEAFOOD_PASTA, 2);
+        VisitDate visitDate = new VisitDate("5");
+        Order order = new Order(visitDate, selectionMenu);
+
+        int discount = order.getSpecialDiscount();
+        int expectedDiscount = 0;
+
+        assertEquals(expectedDiscount, discount);
+    }
 }

@@ -44,6 +44,11 @@ public class Order {
         return discountPolicy.discount(this);
     }
 
+    public int getSpecialDiscount() {
+        discountPolicy = new SpecialDiscountPolicy();
+        return discountPolicy.discount(this);
+    }
+
     public VisitDate getVisitDate() {
         return visitDate;
     }
