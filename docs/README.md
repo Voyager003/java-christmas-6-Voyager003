@@ -59,10 +59,11 @@
   - DiscountPolicy: 할인 정책
     - 크리스마스 디데이 할인 
     - 평일 할인
+    - 주말 할인
     - 특별 할인
-  - Event: 이벤트
-    - 증정 이벤트
-    - 이벤트 배지
+  - Benefit(혜택 정보)
+    - Badge: 이벤트 배지
+    - DiscountAmount: 할인 금액
 
 - Service
   - MenuService
