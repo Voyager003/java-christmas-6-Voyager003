@@ -16,6 +16,14 @@ public class VisitDate {
         this.week = getDayOfWeekFromVisitDate(dateInput);
     }
 
+    public boolean isWeekend() {
+        return this.week == Week.FRIDAY || this.week == Week.SATURDAY;
+    }
+
+    public boolean isWeekday() {
+        return !isWeekend();
+    }
+
     private void validateVisitDate(int visitDate) {
         if (visitDate < 1 || visitDate > 31) {
             throw new IllegalArgumentException("[ERROR] 유효하지 않은 날짜입니다. 다시 입력해 주세요.");
