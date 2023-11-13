@@ -1,6 +1,5 @@
 package christmas.domain;
 
-import christmas.discount.*;
 import christmas.domain.date.VisitDate;
 import christmas.domain.menu.Menu;
 
@@ -8,11 +7,9 @@ import java.util.Map;
 
 
 public class Order {
-
     final VisitDate visitDate;
     final SelectionMenu selectionMenu;
     int orderAmount;
-    DiscountPolicy discountPolicy;
 
     public Order(VisitDate visitDate, SelectionMenu selectionMenu) {
         this.visitDate = visitDate;
@@ -28,27 +25,6 @@ public class Order {
             this.orderAmount += menu.getPrice() * quantity;
         }
     }
-
-    public int getChristmasDiscount() {
-        discountPolicy = new ChristmasDiscountPolicy();
-        return discountPolicy.discount(this);
-    }
-
-    public int getWeekdayDiscount() {
-        discountPolicy = new WeekdayDiscountPolicy();
-        return discountPolicy.discount(this);
-    }
-
-    public int getWeekendDiscount() {
-        discountPolicy = new WeekendDiscountPolicy();
-        return discountPolicy.discount(this);
-    }
-
-    public int getSpecialDiscount() {
-        discountPolicy = new SpecialDiscountPolicy();
-        return discountPolicy.discount(this);
-    }
-
     public VisitDate getVisitDate() {
         return visitDate;
     }
@@ -61,5 +37,3 @@ public class Order {
         return orderAmount;
     }
 }
-
-

@@ -22,7 +22,6 @@ class SelectionMenuServiceTest {
     private MenuService menuService;
     private MenuRepository menuRepository;
     private SelectionMenuService selectionMenuService;
-    private SelectionMenu selectionMenu;
 
 
     @BeforeEach
@@ -30,7 +29,6 @@ class SelectionMenuServiceTest {
         menuRepository = MenuRepository.getInstance();
         menuService = new MenuService(menuRepository);
         selectionMenuService = new SelectionMenuService();
-        selectionMenu = new SelectionMenu();
 
         // 메뉴에 샴페인과 레드와인을 추가한다.
         menuRepository.saveMenu(Beverage.CHAMPAGNE);
