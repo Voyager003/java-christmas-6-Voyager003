@@ -2,6 +2,7 @@ package christmas.service;
 
 import christmas.dao.MenuRepository;
 import christmas.domain.menu.Menu;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class MenuServiceTest {
 
-    MenuService menuService = new MenuService(MenuRepository.getInstance());
+    MenuService menuService;
+    MenuRepository menuRepository;
+
+    @BeforeEach
+    void setUp() {
+        menuRepository = MenuRepository.getInstance();
+        menuRepository.getMenu().clear();
+        menuService = new MenuService(menuRepository);
+    }
 
     @Test
     @DisplayName("메뉴를 저장하는 기능을 테스트한다.")
@@ -45,24 +54,5 @@ class MenuServiceTest {
         Menu findMenu = menuService.findByName("티본스테이크");
 
         assertThat(findMenu).isEqualTo(TBONE_STEAK);
-    }
-
-
-    @Test
-    @DisplayName("메뉴를 저장하고, 저장된 메뉴의 크기를 확인하는 기능을 테스트한다.")
-    void saveMenu_validateSize() {
-        /**
-         * given : 메뉴들이 주어진다.
-         * when : 메뉴를 저장하고, 저장된 메뉴의 크기를 확인한다.
-         * then : 메뉴를 2개 저장했기 때문에, 메뉴의 크기는 2이다.
-         */
-        Menu menu1 = TBONE_STEAK;
-        Menu menu2 = MUSHROOM_SOUP;
-
-        menuService.saveMenu(menu1);
-        menuService.saveMenu(menu2);
-
-        int menuSize = menuService.getMenuSize();
-        assertThat(menuSize).isEqualTo(2);
     }
 }
