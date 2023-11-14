@@ -25,7 +25,8 @@ public class Planner {
         initPlanner();
         Order order = generateOrder();
         printBeforeApplyBenefit(order);
-        generateBenefit(order);
+        Benefit benefit = generateBenefit(order);
+        printAfterApplyBenefit(benefit, order);
     }
 
     private void initPlanner() {
@@ -81,8 +82,17 @@ public class Planner {
         OutputView.printBeforeDiscount(orderAmount);
     }
 
-    private void generateBenefit(Order order) {
+    private Benefit generateBenefit(Order order) {
         Benefit benefit = new Benefit(order);
         OutputView.printGift(benefit);
+        return benefit;
+    }
+
+    private void printAfterApplyBenefit(Benefit benefit, Order order) {
+        OutputView.printBenefitDetail(benefit);
+        OutputView.printTotalDetail(benefit);
+        int totalDiscountAmount = benefit.calculateTotalDiscount(order);
+        OutputView.printAfterDiscount(totalDiscountAmount);
+        OutputView.printEventBadge(benefit);
     }
 }
