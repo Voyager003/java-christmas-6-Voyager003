@@ -33,7 +33,7 @@ public class Benefit {
 
     public int calculateTotalDiscount(Order order) {
         int totalDiscount = getTotalBenefitAmount();
-        return (order.getOrderAmount() - totalDiscount);
+        return (order.getOrderAmount() - totalDiscount + CHAMPAGNE.getPrice());
     }
 
     private void grantGiftEvent(Order order) {
