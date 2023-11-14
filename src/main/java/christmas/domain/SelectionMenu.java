@@ -12,11 +12,24 @@ public class SelectionMenu {
     private final Map<Menu, Integer> selectionMenu = new HashMap<>();
 
     public SelectionMenu(HashMap<String, Integer> input) {
+        validateSelectionMenu(input);
         generateSelectionMenu(input);
     }
 
     public Map<Menu, Integer> getSelectionMenu() {
         return selectionMenu;
+    }
+
+    private void validateSelectionMenu(HashMap<String, Integer> input) {
+        validateMenuName(input);
+    }
+
+    private void validateMenuName(HashMap<String, Integer> input) {
+        for (String menuName : input.keySet()) {
+            if (menuRepository.findByName(menuName) == null) {
+                throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+            }
+        }
     }
 
     private void generateSelectionMenu(HashMap<String, Integer> input) {
