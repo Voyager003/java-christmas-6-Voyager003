@@ -4,6 +4,7 @@ import christmas.domain.Badge;
 import christmas.domain.Benefit;
 import christmas.domain.Order;
 
+import java.text.NumberFormat;
 import java.util.Map;
 
 public class OutputView {
@@ -24,11 +25,11 @@ public class OutputView {
 
     public static void printMessageEvent(Order order) {
         String date = order.getVisitDate().toString();
-        System.out.println("12월" + date + "일에 우테코 식당에서 받을 이벤트 혜택 미리 보기!");
+        System.out.println("12월 " + date + "일에 우테코 식당에서 받을 이벤트 혜택 미리 보기!");
     }
 
     public static void printMenuHeader() {
-        System.out.println("<주문 메뉴>");
+        System.out.println("\n<주문 메뉴>");
     }
 
     public static void printMenu(String menuName, int count) {
@@ -36,12 +37,12 @@ public class OutputView {
     }
 
     public static void printBeforeDiscount(int orderAmount) {
-        System.out.println("<할인 전 총주문 금액>");
-        System.out.println(orderAmount + "원");
+        System.out.println("\n<할인 전 총주문 금액>");
+        System.out.println(NumberFormat.getInstance().format(orderAmount) + "원");
     }
 
     public static void printGift(Benefit benefit) {
-        System.out.println("<증정 메뉴>");
+        System.out.println("\n<증정 메뉴>");
         Map<String, Integer> benefits = benefit.getBenefits();
         String giftMenu = MESSAGE_NOTHING;
         if (benefits.get("증정 이벤트") > 0) {
@@ -51,14 +52,14 @@ public class OutputView {
     }
 
     public static void printBenefitDetail(Benefit benefit) {
-        System.out.println("<혜택 내역>");
+        System.out.println("\n<혜택 내역>");
         Map<String, Integer> benefits = benefit.getBenefits();
         boolean hasBenefit = false;
-
         for (Map.Entry<String, Integer> entry : benefits.entrySet()) {
             if (entry.getValue() > 0) {
                 hasBenefit = true;
-                System.out.println(entry.getKey() + ": -" + entry.getValue() + "원");
+                System.out.println(entry.getKey() + ": -" +
+                        NumberFormat.getInstance().format(entry.getValue()) + "원");
             }
         }
         if (!hasBenefit) {
@@ -67,18 +68,18 @@ public class OutputView {
     }
 
     public static void printTotalDetail(Benefit benefit) {
-        System.out.println("<총혜택 금액>");
+        System.out.println("\n<총혜택 금액>");
         int amount = benefit.getTotalBenefitAmount();
-        System.out.println("-" + amount + "원");
+        System.out.println("-" + NumberFormat.getInstance().format(amount) + "원");
     }
 
     public static void printAfterDiscount(int totalDiscountAmount) {
-        System.out.println("<할인 후 예상 결제 금액>");
-        System.out.println(totalDiscountAmount + "원");
+        System.out.println("\n<할인 후 예상 결제 금액>");
+        System.out.println(NumberFormat.getInstance().format(totalDiscountAmount) + "원");
     }
 
     public static void printEventBadge(Benefit benefit) {
-        System.out.println("<12월 이벤트 배지>");
+        System.out.println("\n<12월 이벤트 배지>");
         Badge badge = benefit.getBadge();
         System.out.println(badge.toString());
     }
