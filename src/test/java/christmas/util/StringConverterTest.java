@@ -34,7 +34,7 @@ class StringConverterTest {
         String input = " ";
         assertThatCode(() -> StringConverter.convertToInt(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("숫자가 아닌 문자가 포함되었거나 공백이 감지되었습니다.");
+                .hasMessageContaining("[ERROR] 유효하지 않은 날짜입니다. 다시 입력해 주세요.");
     }
 
     @Test
@@ -48,7 +48,7 @@ class StringConverterTest {
         String input = "10j";
         assertThatCode(() -> StringConverter.convertToInt(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("숫자가 아닌 문자가 포함되었거나 공백이 감지되었습니다.");
+                .hasMessageContaining("[ERROR] 유효하지 않은 날짜입니다. 다시 입력해 주세요.");
     }
 
     @Test
