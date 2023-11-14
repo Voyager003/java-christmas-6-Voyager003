@@ -79,4 +79,20 @@ class SelectionMenuTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
     }
+
+    @Test
+    @DisplayName("주문 수량이 0개 이하이면 예외가 발생한다.")
+    void validateQuantity_exception() {
+        /**
+         * given : 샴페인과 레드와인을 0개 주문한다.
+         * when : 입력한 메뉴를 선택 메뉴에 저장한다.
+         * then : 주문 수량이 0개 이하이므로 예외가 발생한다.
+         */
+        String input = "샴페인-0,레드와인-0";
+        HashMap<String, Integer> inputs = StringConverter.convertToMap(input);
+
+        assertThatThrownBy(() -> new SelectionMenu(inputs))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+    }
 }

@@ -22,11 +22,20 @@ public class SelectionMenu {
 
     private void validateSelectionMenu(HashMap<String, Integer> input) {
         validateMenuName(input);
+        validateQuantity(input);
     }
 
     private void validateMenuName(HashMap<String, Integer> input) {
         for (String menuName : input.keySet()) {
             if (menuRepository.findByName(menuName) == null) {
+                throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+            }
+        }
+    }
+
+    private void validateQuantity(HashMap<String, Integer> input) {
+        for (int quantity : input.values()) {
+            if (quantity < 1) {
                 throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
             }
         }
