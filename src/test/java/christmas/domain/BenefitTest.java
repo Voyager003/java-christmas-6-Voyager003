@@ -1,9 +1,13 @@
 package christmas.domain;
 
+import christmas.dao.MenuRepository;
 import christmas.domain.date.VisitDate;
+import christmas.service.MenuService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static christmas.domain.menu.Beverage.RED_WINE;
 import static christmas.domain.menu.Dessert.CHOCOLATE_CAKE;
 import static christmas.domain.menu.MainDish.SEAFOOD_PASTA;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,23 +15,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BenefitTest {
 
-    @Test
-    @DisplayName("크리스마스 할인이 적용되는지 확인한다.")
-    void getChristmasDiscount() {
-        /**
-         * given : 방문 날짜로 5일이 주어진다.
-         * when : 크리스마스 할인 정책을 적용한다.
-         * then : 적용될 할인 금액은 1400원이다.
-         */
-        VisitDate visitDate = new VisitDate("5");
-        SelectionMenu selectionMenu = new SelectionMenu();
-        Order order = new Order(visitDate, selectionMenu);
-        Benefit benefit = new Benefit(order);
+    private MenuService menuService;
+    private MenuRepository menuRepository;
 
-        int discount = benefit.getTotalBenefitAmount();
-        int expectedDiscount = 1_400;
+    @BeforeEach
+    public void setup() {
+        menuRepository = MenuRepository.getInstance();
+        menuService = new MenuService(menuRepository);
 
-        assertEquals(expectedDiscount, discount);
+        // 메뉴에 샴페인과 레드와인을 추가한다.
+        menuRepository.saveMenu(SEAFOOD_PASTA);
+        menuRepository.saveMenu(RED_WINE);
+        menuRepository.saveMenu(CHOCOLATE_CAKE);
     }
 
     @Test
@@ -38,9 +37,7 @@ class BenefitTest {
          * when : 할인 정책을 적용한다.
          * then : 적용되는 할인 정책은 크리스마스(1000), 주말(2023*2)으로 5046원이 예상된다.
          */
-        SelectionMenu selectionMenu = new SelectionMenu();
-        selectionMenu.saveMenu(CHOCOLATE_CAKE, 2);
-        selectionMenu.saveMenu(SEAFOOD_PASTA, 2);
+        SelectionMenu selectionMenu = new SelectionMenu("초코케이크-2,해산물파스타-2");
         VisitDate visitDate = new VisitDate("1");
         Order order = new Order(visitDate, selectionMenu);
         Benefit benefit = new Benefit(order);
@@ -59,8 +56,7 @@ class BenefitTest {
          * when : 할인 정책을 적용한다.
          * then : 메인디쉬가 없으므로 크리스마스 할인(3200)만 적용한다.
          */
-        SelectionMenu selectionMenu = new SelectionMenu();
-        selectionMenu.saveMenu(CHOCOLATE_CAKE, 2);
+        SelectionMenu selectionMenu = new SelectionMenu("초코케이크-2");
         VisitDate visitDate = new VisitDate("23");
         Order order = new Order(visitDate, selectionMenu);
         Benefit benefit = new Benefit(order);
@@ -77,17 +73,15 @@ class BenefitTest {
         /**
          * given : 파스타와 초콜릿 케이크, 13일(평일)이 주어진다.
          * when : 할인 정책을 적용한다.
-         * then : 크리스마스할인(2200)과 특별할인(1000), 평일할인(2023*2)으로 6246원을 적용
+         * then : 증정할인(25000), 크리스마스할인(2200)과 특별할인(1000), 평일할인(2023*2)으로 6246원을 적용
          */
-        SelectionMenu selectionMenu = new SelectionMenu();
-        selectionMenu.saveMenu(SEAFOOD_PASTA, 4);
-        selectionMenu.saveMenu(CHOCOLATE_CAKE, 2);
+        SelectionMenu selectionMenu = new SelectionMenu("해산물파스타-4,초코케이크-2");
         VisitDate visitDate = new VisitDate("13");
         Order order = new Order(visitDate, selectionMenu);
         Benefit benefit = new Benefit(order);
 
         int discount = benefit.getTotalBenefitAmount();
-        int expectedDiscount = 6246;
+        int expectedDiscount = 31_246;
 
         assertEquals(expectedDiscount, discount);
     }
@@ -98,17 +92,15 @@ class BenefitTest {
         /**
          * given : 메뉴를 주문한다.
          * when : 할인 정책을 적용한다.
-         * then : 예상되는 할인액은 6246원으로 STAR 뱃지를 부여한다.
+         * then : 예상되는 할인액은 31246원으로 SANTA 뱃지를 부여한다.
          */
-        SelectionMenu selectionMenu = new SelectionMenu();
-        selectionMenu.saveMenu(SEAFOOD_PASTA, 4);
-        selectionMenu.saveMenu(CHOCOLATE_CAKE, 2);
+        SelectionMenu selectionMenu = new SelectionMenu("해산물파스타-4,초코케이크-2");
         VisitDate visitDate = new VisitDate("13");
         Order order = new Order(visitDate, selectionMenu);
         Benefit benefit = new Benefit(order);
 
         Badge badge = benefit.getBadge();
-        assertThat(badge).isEqualTo(Badge.STAR);
+        assertThat(badge).isEqualTo(Badge.SANTA);
     }
 
     @Test
@@ -119,8 +111,7 @@ class BenefitTest {
          * when : 할인 정책을 적용한다.
          * then : 예상되는 할인액은 1100원으로 부여되는 뱃지는 없다.
          */
-        SelectionMenu selectionMenu = new SelectionMenu();
-        selectionMenu.saveMenu(CHOCOLATE_CAKE, 1);
+        SelectionMenu selectionMenu = new SelectionMenu("초코케이크-1");
         VisitDate visitDate = new VisitDate("2");
         Order order = new Order(visitDate, selectionMenu);
         Benefit benefit = new Benefit(order);
@@ -137,9 +128,7 @@ class BenefitTest {
          * when : 할인 정책을 적용한다.
          * then : 예상되는 할인액은 22430원으로 SANTA 뱃지를 부여한다.
          */
-        SelectionMenu selectionMenu = new SelectionMenu();
-        selectionMenu.saveMenu(SEAFOOD_PASTA, 4);
-        selectionMenu.saveMenu(CHOCOLATE_CAKE, 10);
+        SelectionMenu selectionMenu = new SelectionMenu("해산물파스타-4,초코케이크-10");
         VisitDate visitDate = new VisitDate("13");
         Order order = new Order(visitDate, selectionMenu);
         Benefit benefit = new Benefit(order);
@@ -156,8 +145,7 @@ class BenefitTest {
          * when : 할인 정책을 적용한다.
          * then : 할인이 적용되지 않았지만, 샴페인을 증정함으로 25000원이 추가된다.
          */
-        SelectionMenu selectionMenu = new SelectionMenu();
-        selectionMenu.saveMenu(CHOCOLATE_CAKE, 10);
+        SelectionMenu selectionMenu = new SelectionMenu("초코케이크-10");
         VisitDate visitDate = new VisitDate("29");
 
         Order order = new Order(visitDate, selectionMenu);
