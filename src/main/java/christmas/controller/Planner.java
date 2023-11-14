@@ -8,18 +8,14 @@ import christmas.domain.SelectionMenu;
 import christmas.domain.date.VisitDate;
 import christmas.domain.menu.Menu;
 import christmas.service.MenuService;
-import christmas.service.SelectionMenuService;
-import christmas.util.StringConverter;
 import christmas.view.InputView;
 import christmas.view.OutputView;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
 public class Planner {
     private final MenuService menuService = new MenuService(MenuRepository.getInstance());
-    private final SelectionMenuService selectionMenuService = new SelectionMenuService();
 
     public void start() {
         initPlanner();
@@ -53,8 +49,7 @@ public class Planner {
     private SelectionMenu getSelectionMenu() {
         try {
             String menuInput = InputView.inputMenu();
-            HashMap<String, Integer> inputs = StringConverter.convertToMap(menuInput);
-            return selectionMenuService.saveSelectionMenu(inputs);
+            return new SelectionMenu(menuInput);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return getSelectionMenu();
