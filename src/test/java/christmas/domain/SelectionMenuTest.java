@@ -3,12 +3,10 @@ package christmas.domain;
 import christmas.dao.MenuRepository;
 import christmas.domain.menu.Menu;
 import christmas.service.MenuService;
-import christmas.util.StringConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static christmas.domain.menu.Beverage.CHAMPAGNE;
@@ -40,9 +38,8 @@ class SelectionMenuTest {
          * then : 선택 메뉴에는 샴페인 1개, 레드와인 1개가 저장되어 있다.
          */
         String input = "샴페인-1,레드와인-1";
-        HashMap<String, Integer> inputs = StringConverter.convertToMap(input);
 
-        SelectionMenu menu = new SelectionMenu(inputs);
+        SelectionMenu menu = new SelectionMenu(input);
         Map<Menu, Integer> selectionMenu = menu.getSelectionMenu();
 
         assertThat(selectionMenu).containsEntry(CHAMPAGNE, 1)
@@ -58,9 +55,8 @@ class SelectionMenuTest {
          * then : 입력 조건을 충족하여 예외를 발생시키지 않는다.
          */
         String input = "샴페인-1,레드와인-1";
-        HashMap<String, Integer> inputs = StringConverter.convertToMap(input);
 
-        assertThatCode(() -> new SelectionMenu(inputs))
+        assertThatCode(() -> new SelectionMenu(input))
                 .doesNotThrowAnyException();
     }
 
@@ -73,9 +69,8 @@ class SelectionMenuTest {
          * then : 없는 메뉴(탕후루)를 입력하여 예외가 발생한다.
          */
         String input = "탕후루-1,레드와인-1";
-        HashMap<String, Integer> inputs = StringConverter.convertToMap(input);
 
-        assertThatThrownBy(() -> new SelectionMenu(inputs))
+        assertThatThrownBy(() -> new SelectionMenu(input))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
     }
@@ -89,9 +84,23 @@ class SelectionMenuTest {
          * then : 주문 수량이 0개 이하이므로 예외가 발생한다.
          */
         String input = "샴페인-0,레드와인-0";
-        HashMap<String, Integer> inputs = StringConverter.convertToMap(input);
 
-        assertThatThrownBy(() -> new SelectionMenu(inputs))
+        assertThatThrownBy(() -> new SelectionMenu(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+    }
+
+    @Test
+    @DisplayName("중복된 메뉴 입력 시, 예외가 발생한다.")
+    void validateDuplicateMenu_exception() {
+        /**
+         * given : 샴페인 1개를 두 번 주문한다.
+         * when : 입력한 메뉴를 선택 메뉴에 저장한다.
+         * then : 중복된 메뉴 입력으로 예외가 발생한다.
+         */
+        String input = "샴페인-1,샴페인-1";
+
+        assertThatThrownBy(() -> new SelectionMenu(input))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
     }

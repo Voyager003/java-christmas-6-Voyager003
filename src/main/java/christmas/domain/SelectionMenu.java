@@ -3,7 +3,9 @@ package christmas.domain;
 
 import christmas.dao.MenuRepository;
 import christmas.domain.menu.Menu;
+import christmas.util.StringConverter;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +13,7 @@ public class SelectionMenu {
     private final MenuRepository menuRepository = MenuRepository.getInstance();
     private final Map<Menu, Integer> selectionMenu = new HashMap<>();
 
-    public SelectionMenu(HashMap<String, Integer> input) {
+    public SelectionMenu(String input) {
         validateSelectionMenu(input);
         generateSelectionMenu(input);
     }
@@ -20,33 +22,45 @@ public class SelectionMenu {
         return selectionMenu;
     }
 
-    private void validateSelectionMenu(HashMap<String, Integer> input) {
+    private void validateSelectionMenu(String input) {
         validateMenuName(input);
         validateQuantity(input);
+        validateDuplicateMenu(input);
     }
 
-    private void validateMenuName(HashMap<String, Integer> input) {
-        for (String menuName : input.keySet()) {
+    private void validateMenuName(String input) {
+        HashMap<String, Integer> menu = StringConverter.convertToMap(input);
+        for (String menuName : menu.keySet()) {
             if (menuRepository.findByName(menuName) == null) {
                 throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
             }
         }
     }
 
-    private void validateQuantity(HashMap<String, Integer> input) {
-        for (int quantity : input.values()) {
+    private void validateQuantity(String input) {
+        HashMap<String, Integer> menu = StringConverter.convertToMap(input);
+        for (int quantity : menu.values()) {
             if (quantity < 1) {
                 throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
             }
         }
     }
 
-    private void generateSelectionMenu(HashMap<String, Integer> input) {
-        for (Map.Entry<String, Integer> entry : input.entrySet()) {
+    private void validateDuplicateMenu(String input) {
+        String[] menus = input.split(",");
+        long uniqueMenuCount = Arrays.stream(menus).distinct().count();
+        if (menus.length != uniqueMenuCount) {
+            throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+        }
+    }
+
+    private void generateSelectionMenu(String input) {
+        HashMap<String, Integer> menu = StringConverter.convertToMap(input);
+        for (Map.Entry<String, Integer> entry : menu.entrySet()) {
             String menuName = entry.getKey();
             int quantity = entry.getValue();
-            Menu menu = menuRepository.findByName(menuName);
-            selectionMenu.put(menu, quantity);
+            Menu searchMenu = menuRepository.findByName(menuName);
+            selectionMenu.put(searchMenu, quantity);
         }
     }
 }
