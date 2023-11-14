@@ -2,6 +2,7 @@ package christmas.controller;
 
 import christmas.config.PlannerConfig;
 import christmas.dao.MenuRepository;
+import christmas.domain.Benefit;
 import christmas.domain.Order;
 import christmas.domain.SelectionMenu;
 import christmas.domain.date.VisitDate;
@@ -24,6 +25,7 @@ public class Planner {
         initPlanner();
         Order order = generateOrder();
         printBeforeApplyBenefit(order);
+        generateBenefit(order);
     }
 
     private void initPlanner() {
@@ -77,5 +79,10 @@ public class Planner {
     private void printBeforeDiscount(Order order) {
         int orderAmount = order.getOrderAmount();
         OutputView.printBeforeDiscount(orderAmount);
+    }
+
+    private void generateBenefit(Order order) {
+        Benefit benefit = new Benefit(order);
+        OutputView.printGift(benefit);
     }
 }
