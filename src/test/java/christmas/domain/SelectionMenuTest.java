@@ -35,16 +35,16 @@ class SelectionMenuTest {
     @DisplayName("입력한 메뉴가 선택 메뉴에 저장되는지 확인한다.")
     void generateSelectionMenu_expectMenu() {
         /**
-         * given : 샴페인과 레드와인을 입력한다.
+         * given : 해산물파스타 1개와 레드와인 1개를 주문한다.
          * when : 입력한 메뉴를 선택 메뉴에 저장한다.
          * then : 선택 메뉴에는 샴페인 1개, 레드와인 1개가 저장되어 있다.
          */
-        String input = "샴페인-1,레드와인-1";
+        String input = "해산물파스타-1,레드와인-1";
 
         SelectionMenu menu = new SelectionMenu(input);
         Map<Menu, Integer> selectionMenu = menu.getSelectionMenu();
 
-        assertThat(selectionMenu).containsEntry(CHAMPAGNE, 1)
+        assertThat(selectionMenu).containsEntry(SEAFOOD_PASTA, 1)
                 .containsEntry(RED_WINE, 1);
     }
 
@@ -52,11 +52,11 @@ class SelectionMenuTest {
     @DisplayName("조건에 맞는 입력을 받는다면, 예외를 발생시키지 않는다.")
     void validateSelectionMenu_noException() {
         /**
-         * given : 샴페인과 레드와인을 입력한다.
+         * given : 해산물파스타 2개와 레드와인 1개를 주문한다.
          * when : 입력한 메뉴를 선택 메뉴에 저장한다.
          * then : 입력 조건을 충족하여 예외를 발생시키지 않는다.
          */
-        String input = "샴페인-1,레드와인-1";
+        String input = "해산물파스타-2,레드와인-1";
 
         assertThatCode(() -> new SelectionMenu(input))
                 .doesNotThrowAnyException();
