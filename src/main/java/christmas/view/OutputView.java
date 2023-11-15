@@ -1,8 +1,8 @@
 package christmas.view;
 
-import christmas.domain.Badge;
-import christmas.domain.Benefit;
-import christmas.domain.Order;
+import christmas.domain.benefit.Badge;
+import christmas.domain.benefit.Benefit;
+import christmas.domain.order.Order;
 
 import java.text.NumberFormat;
 import java.util.Map;

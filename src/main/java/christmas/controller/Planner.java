@@ -2,10 +2,10 @@ package christmas.controller;
 
 import christmas.config.PlannerConfig;
 import christmas.dao.MenuRepository;
-import christmas.domain.Benefit;
-import christmas.domain.Order;
-import christmas.domain.SelectionMenu;
-import christmas.domain.date.VisitDate;
+import christmas.domain.benefit.Benefit;
+import christmas.domain.order.Order;
+import christmas.domain.order.SelectionMenu;
+import christmas.domain.order.date.VisitDate;
 import christmas.domain.menu.Menu;
 import christmas.service.MenuService;
 import christmas.view.InputView;

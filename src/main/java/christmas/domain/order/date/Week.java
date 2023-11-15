@@ -1,4 +1,4 @@
-package christmas.domain.date;
+package christmas.domain.order.date;
 
 public enum Week {
     SUNDAY("일", 3),

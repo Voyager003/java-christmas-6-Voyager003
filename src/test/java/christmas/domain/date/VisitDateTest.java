@@ -1,5 +1,7 @@
 package christmas.domain.date;
 
+import christmas.domain.order.date.VisitDate;
+import christmas.domain.order.date.Week;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -1,6 +1,6 @@
-package christmas.domain;
+package christmas.domain.order;
 
-import christmas.domain.date.VisitDate;
+import christmas.domain.order.date.VisitDate;
 import christmas.domain.menu.Menu;
 
 import java.util.Map;

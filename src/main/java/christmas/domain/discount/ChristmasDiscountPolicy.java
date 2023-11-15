@@ -1,6 +1,6 @@
-package christmas.discount;
+package christmas.domain.discount;
 
-import christmas.domain.Order;
+import christmas.domain.order.Order;
 
 public class ChristmasDiscountPolicy implements DiscountPolicy {
     private static final int BASE_DISCOUNT = 1000;

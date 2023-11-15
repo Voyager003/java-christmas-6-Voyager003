@@ -2,6 +2,7 @@ package christmas.domain;
 
 import christmas.dao.MenuRepository;
 import christmas.domain.menu.Menu;
+import christmas.domain.order.SelectionMenu;
 import christmas.service.MenuService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

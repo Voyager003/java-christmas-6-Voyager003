@@ -1,9 +1,9 @@
 package christmas.domain.menu;
 
 import christmas.dao.MenuRepository;
-import christmas.domain.Order;
-import christmas.domain.SelectionMenu;
-import christmas.domain.date.VisitDate;
+import christmas.domain.order.Order;
+import christmas.domain.order.SelectionMenu;
+import christmas.domain.order.date.VisitDate;
 import christmas.service.MenuService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
