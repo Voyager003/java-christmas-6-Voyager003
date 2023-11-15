@@ -70,7 +70,11 @@ public class OutputView {
     public static void printTotalDetail(Benefit benefit) {
         System.out.println("\n<총혜택 금액>");
         int amount = benefit.getTotalBenefitAmount();
-        System.out.println("-" + NumberFormat.getInstance().format(amount) + "원");
+        String formattedAmount = NumberFormat.getInstance().format(amount);
+        if (amount != 0) {
+            formattedAmount = "-" + formattedAmount;
+        }
+        System.out.println(formattedAmount + "원");
     }
 
     public static void printAfterDiscount(int totalDiscountAmount) {
