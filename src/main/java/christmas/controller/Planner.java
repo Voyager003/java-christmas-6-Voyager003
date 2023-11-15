@@ -15,8 +15,6 @@ import java.util.Map;
 
 
 public class Planner {
-    private final MenuService menuService = new MenuService(MenuRepository.getInstance());
-
     public void start() {
         initPlanner();
         Order order = generateOrder();
@@ -26,6 +24,7 @@ public class Planner {
     }
 
     private void initPlanner() {
+        MenuService menuService = new MenuService(MenuRepository.getInstance());
         new PlannerConfig(menuService);
         OutputView.printMessageIntroduce();
     }
