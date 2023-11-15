@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static christmas.domain.menu.Appetizer.TAPAS;
 import static christmas.domain.menu.Beverage.RED_WINE;
 import static christmas.domain.menu.Dessert.CHOCOLATE_CAKE;
 import static christmas.domain.menu.MainDish.SEAFOOD_PASTA;
@@ -27,6 +28,7 @@ class BenefitTest {
         menuRepository.saveMenu(SEAFOOD_PASTA);
         menuRepository.saveMenu(RED_WINE);
         menuRepository.saveMenu(CHOCOLATE_CAKE);
+        menuRepository.saveMenu(TAPAS);
     }
 
     @Test
@@ -153,5 +155,41 @@ class BenefitTest {
 
         int benefitAmount = benefit.getTotalBenefitAmount();
         assertThat(benefitAmount).isEqualTo(25_000);
+    }
+
+    @Test
+    @DisplayName("총 주문금액이 10,000원 이하일 때, 할인 후 예상 금액을 테스트 한다.")
+    void calculateTotalDiscount_lessTenThousand() {
+        /**
+         * given : 타파스 1개를 주문한다.(5,500원)
+         * when : 할인 예상 금액을 계산한다.
+         * then : 총 주문금액이 10,000원 이하로 적용되지 않아, 예상 금액은 5,500원이다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu("타파스-1");
+        VisitDate visitDate = new VisitDate("29");
+
+        Order order = new Order(visitDate, selectionMenu);
+        Benefit benefit = new Benefit(order);
+
+        benefit.calculateTotalDiscount(order);
+        assertThat(benefit.calculateTotalDiscount(order)).isEqualTo(5500);
+    }
+
+    @Test
+    @DisplayName("총 주문금액이 10,000원 이상이지만, 증정만 적용된 경우 예상 금액을 테스트한다.")
+    void calculateTotalDiscount_moreTenThousand_onlyGift() {
+        /**
+         * given : 타파스 2개(11,000원)와 레드와인 2개(120,000원)을 주문한다.
+         * when : 할인 예상 금액을 계산한다.
+         * then : 증정이 적용됐지만, 결제금액에는 포함되지 않으므로 예상 금액은 131,000원이다.
+         */
+        SelectionMenu selectionMenu = new SelectionMenu("타파스-2,레드와인-2");
+        VisitDate visitDate = new VisitDate("26");
+
+        Order order = new Order(visitDate, selectionMenu);
+        Benefit benefit = new Benefit(order);
+
+        benefit.calculateTotalDiscount(order);
+        assertThat(benefit.calculateTotalDiscount(order)).isEqualTo(131_000);
     }
 }

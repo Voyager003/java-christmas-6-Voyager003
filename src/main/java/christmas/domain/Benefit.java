@@ -32,8 +32,11 @@ public class Benefit {
     }
 
     public int calculateTotalDiscount(Order order) {
-        int totalDiscount = getTotalBenefitAmount();
-        return (order.getOrderAmount() - totalDiscount + CHAMPAGNE.getPrice());
+        if (order.getOrderAmount() < 10_000) {
+            return order.getOrderAmount();
+        }
+        int totalDiscountAmount = getTotalBenefitAmount() - benefits.get("증정 이벤트");
+        return order.getOrderAmount() - totalDiscountAmount;
     }
 
     private void grantGiftEvent(Order order) {
