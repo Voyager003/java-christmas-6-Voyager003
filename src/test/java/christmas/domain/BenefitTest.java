@@ -3,6 +3,7 @@ package christmas.domain;
 import christmas.dao.MenuRepository;
 import christmas.domain.benefit.Badge;
 import christmas.domain.benefit.Benefit;
+import christmas.domain.discount.*;
 import christmas.domain.order.Order;
 import christmas.domain.order.SelectionMenu;
 import christmas.domain.order.date.VisitDate;
@@ -10,6 +11,9 @@ import christmas.service.MenuService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static christmas.domain.menu.Appetizer.TAPAS;
 import static christmas.domain.menu.Beverage.RED_WINE;
@@ -22,17 +26,23 @@ class BenefitTest {
 
     private MenuService menuService;
     private MenuRepository menuRepository;
+    private List<DiscountPolicy> policies;
+
 
     @BeforeEach
     public void setup() {
         menuRepository = MenuRepository.getInstance();
         menuService = new MenuService(menuRepository);
-
-        // 메뉴에 샴페인과 레드와인을 추가한다.
         menuRepository.saveMenu(SEAFOOD_PASTA);
         menuRepository.saveMenu(RED_WINE);
         menuRepository.saveMenu(CHOCOLATE_CAKE);
         menuRepository.saveMenu(TAPAS);
+
+        policies = Arrays.asList(
+                new ChristmasDiscountPolicy(),
+                new WeekdayDiscountPolicy(),
+                new WeekendDiscountPolicy(),
+                new SpecialDiscountPolicy());
     }
 
     @Test
@@ -46,7 +56,7 @@ class BenefitTest {
         SelectionMenu selectionMenu = new SelectionMenu("초코케이크-2,해산물파스타-2");
         VisitDate visitDate = new VisitDate("1");
         Order order = new Order(visitDate, selectionMenu);
-        Benefit benefit = new Benefit(order);
+        Benefit benefit = new Benefit(order, policies);
 
         int discount = benefit.getTotalBenefitAmount();
         int expectedDiscount = 5046;
@@ -65,7 +75,7 @@ class BenefitTest {
         SelectionMenu selectionMenu = new SelectionMenu("초코케이크-2");
         VisitDate visitDate = new VisitDate("23");
         Order order = new Order(visitDate, selectionMenu);
-        Benefit benefit = new Benefit(order);
+        Benefit benefit = new Benefit(order, policies);
 
         int discount = benefit.getTotalBenefitAmount();
         int expectedDiscount = 3200;
@@ -84,7 +94,7 @@ class BenefitTest {
         SelectionMenu selectionMenu = new SelectionMenu("해산물파스타-4,초코케이크-2");
         VisitDate visitDate = new VisitDate("13");
         Order order = new Order(visitDate, selectionMenu);
-        Benefit benefit = new Benefit(order);
+        Benefit benefit = new Benefit(order, policies);
 
         int discount = benefit.getTotalBenefitAmount();
         int expectedDiscount = 31_246;
@@ -103,7 +113,7 @@ class BenefitTest {
         SelectionMenu selectionMenu = new SelectionMenu("해산물파스타-4,초코케이크-2");
         VisitDate visitDate = new VisitDate("13");
         Order order = new Order(visitDate, selectionMenu);
-        Benefit benefit = new Benefit(order);
+        Benefit benefit = new Benefit(order, policies);
 
         Badge badge = benefit.getBadge();
         assertThat(badge).isEqualTo(Badge.SANTA);
@@ -120,7 +130,7 @@ class BenefitTest {
         SelectionMenu selectionMenu = new SelectionMenu("초코케이크-1");
         VisitDate visitDate = new VisitDate("2");
         Order order = new Order(visitDate, selectionMenu);
-        Benefit benefit = new Benefit(order);
+        Benefit benefit = new Benefit(order, policies);
 
         Badge badge = benefit.getBadge();
         assertThat(badge).isEqualTo(Badge.NONE);
@@ -137,7 +147,7 @@ class BenefitTest {
         SelectionMenu selectionMenu = new SelectionMenu("해산물파스타-4,초코케이크-10");
         VisitDate visitDate = new VisitDate("13");
         Order order = new Order(visitDate, selectionMenu);
-        Benefit benefit = new Benefit(order);
+        Benefit benefit = new Benefit(order, policies);
 
         Badge badge = benefit.getBadge();
         assertThat(badge).isEqualTo(Badge.SANTA);
@@ -155,7 +165,7 @@ class BenefitTest {
         VisitDate visitDate = new VisitDate("29");
 
         Order order = new Order(visitDate, selectionMenu);
-        Benefit benefit = new Benefit(order);
+        Benefit benefit = new Benefit(order, policies);
 
         int benefitAmount = benefit.getTotalBenefitAmount();
         assertThat(benefitAmount).isEqualTo(25_000);
@@ -173,7 +183,7 @@ class BenefitTest {
         VisitDate visitDate = new VisitDate("29");
 
         Order order = new Order(visitDate, selectionMenu);
-        Benefit benefit = new Benefit(order);
+        Benefit benefit = new Benefit(order, policies);
 
         benefit.calculateTotalDiscount(order);
         assertThat(benefit.calculateTotalDiscount(order)).isEqualTo(5500);
@@ -191,7 +201,7 @@ class BenefitTest {
         VisitDate visitDate = new VisitDate("26");
 
         Order order = new Order(visitDate, selectionMenu);
-        Benefit benefit = new Benefit(order);
+        Benefit benefit = new Benefit(order, policies);
 
         benefit.calculateTotalDiscount(order);
         assertThat(benefit.calculateTotalDiscount(order)).isEqualTo(131_000);
