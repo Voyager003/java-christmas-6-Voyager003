@@ -2,6 +2,7 @@ package christmas.domain;
 
 
 import christmas.dao.MenuRepository;
+import christmas.domain.menu.Beverage;
 import christmas.domain.menu.Menu;
 import christmas.util.StringConverter;
 
@@ -27,6 +28,7 @@ public class SelectionMenu {
         validateQuantity(input);
         validateDuplicateMenu(input);
         validateMaximumMenu(input);
+        validateOnlyContainBeverage(input);
     }
 
     private void validateMenuName(String input) {
@@ -61,6 +63,19 @@ public class SelectionMenu {
                 .stream().mapToInt(Integer::intValue).sum();
         if (totalCount > 20) {
             throw new IllegalArgumentException("[ERROR] 메뉴의 총 주문 갯수가 20개를 초과했습니다. 다시 입력해 주세요.");
+        }
+    }
+
+    public void validateOnlyContainBeverage(String input) {
+        HashMap<String, Integer> menu = StringConverter.convertToMap(input);
+
+        boolean isAllBeverages = menu.keySet().stream()
+                .allMatch(menuName -> Arrays.stream(Beverage.values())
+                        .map(Beverage::getName)
+                        .anyMatch(beverageName -> beverageName.equals(menuName)));
+
+        if (isAllBeverages) {
+            throw new IllegalArgumentException("[ERROR] 음료만 주문할 수 없습니다. 다시 입력해 주세요.");
         }
     }
 
