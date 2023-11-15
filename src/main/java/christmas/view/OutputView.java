@@ -2,10 +2,11 @@ package christmas.view;
 
 import christmas.domain.benefit.Badge;
 import christmas.domain.benefit.Benefit;
+import christmas.domain.benefit.BenefitDetail;
 import christmas.domain.order.Order;
 
 import java.text.NumberFormat;
-import java.util.Map;
+import java.util.List;
 
 public class OutputView {
 
@@ -53,27 +54,21 @@ public class OutputView {
 
     public static void printGift(Benefit benefit) {
         System.out.println(MESSAGE_GIFT);
-        Map<String, Integer> benefits = benefit.getBenefits();
-        String giftMenu = MESSAGE_NOTHING;
-        if (benefits.get("증정 이벤트") > 0) {
-            giftMenu = "샴페인 1개";
+        String giftMenuName = benefit.getGift();
+        if (giftMenuName == null) {
+            System.out.println("없음");
+        } else {
+            System.out.println(giftMenuName + " 1개");
         }
-        System.out.println(giftMenu);
     }
 
     public static void printBenefitDetail(Benefit benefit) {
         System.out.println(MESSAGE_BENEFIT_DETAIL);
-        Map<String, Integer> benefits = benefit.getBenefits();
-        boolean hasBenefit = false;
-        for (Map.Entry<String, Integer> entry : benefits.entrySet()) {
-            if (entry.getValue() > 0) {
-                hasBenefit = true;
-                System.out.println(entry.getKey() + ": -" +
-                        NumberFormat.getInstance().format(entry.getValue()) + "원");
-            }
-        }
-        if (!hasBenefit) {
+        List<BenefitDetail> benefits = benefit.getBenefits();
+        if (benefits.isEmpty()) {
             System.out.println(MESSAGE_NOTHING);
+        } else {
+            benefits.forEach(System.out::println);
         }
     }
 
@@ -87,8 +82,9 @@ public class OutputView {
         System.out.println(formattedAmount + "원");
     }
 
-    public static void printAfterDiscount(int totalDiscountAmount) {
+    public static void printAfterDiscount(Benefit benefit, Order order) {
         System.out.println(MESSAGE_AFTER_DISCOUNT);
+        int totalDiscountAmount = benefit.calculateTotalDiscount(order);
         System.out.println(NumberFormat.getInstance().format(totalDiscountAmount) + "원");
     }
 
