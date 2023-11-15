@@ -26,20 +26,28 @@ public class Benefit {
                 .sum();
     }
 
-    public void calculateBenefitAmount(Order order) {
-        benefits.put("크리스마스 디데이 할인", getChristmasDiscount(order));
-        benefits.put("평일 할인", getWeekdayDiscount(order));
-        benefits.put("주말 할인", getWeekendDiscount(order));
-        benefits.put("특별 할인", getSpecialDiscount(order));
-        grantGiftEvent(order);
-    }
-
     public int calculateTotalDiscount(Order order) {
         if (order.getOrderAmount() < 10_000) {
             return order.getOrderAmount();
         }
         int totalDiscountAmount = getTotalBenefitAmount() - benefits.get("증정 이벤트");
         return order.getOrderAmount() - totalDiscountAmount;
+    }
+
+    public Map<String, Integer> getBenefits() {
+        return benefits;
+    }
+
+    public Badge getBadge() {
+        return badge;
+    }
+
+    private void calculateBenefitAmount(Order order) {
+        benefits.put("크리스마스 디데이 할인", getChristmasDiscount(order));
+        benefits.put("평일 할인", getWeekdayDiscount(order));
+        benefits.put("주말 할인", getWeekendDiscount(order));
+        benefits.put("특별 할인", getSpecialDiscount(order));
+        grantGiftEvent(order);
     }
 
     private void grantGiftEvent(Order order) {
@@ -77,13 +85,5 @@ public class Benefit {
     private int getSpecialDiscount(Order order) {
         DiscountPolicy specialDiscountPolicy = new SpecialDiscountPolicy();
         return specialDiscountPolicy.discount(order);
-    }
-
-    public Map<String, Integer> getBenefits() {
-        return benefits;
-    }
-
-    public Badge getBadge() {
-        return badge;
     }
 }
