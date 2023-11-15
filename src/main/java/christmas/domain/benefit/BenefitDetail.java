@@ -23,7 +23,6 @@ public class BenefitDetail {
         return amount;
     }
 
-
     @Override
     public String toString() {
         return name + ": -" + NumberFormat.getInstance().format(amount) + "원";
