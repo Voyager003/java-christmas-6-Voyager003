@@ -1,5 +1,6 @@
 package christmas.domain.discount;
 
+import christmas.domain.benefit.BenefitDetail;
 import christmas.domain.order.Order;
 import christmas.domain.order.date.Week;
 import christmas.domain.menu.Dessert;
@@ -13,11 +14,15 @@ public class WeekdayDiscountPolicy implements DiscountPolicy {
     int dessertCount;
 
     @Override
-    public int discount(Order order) {
+    public BenefitDetail applyDiscount(Order order) {
+        int discountAmount = discount(order);
+        return new BenefitDetail("평일 할인", discountAmount);
+    }
+
+    private int discount(Order order) {
         if (!isWeekDay(order.getVisitDate().getWeek())) {
             return 0;
         }
-
         return containDessert(order.getSelectionMenu().getSelectionMenu()) * DISCOUNT_PER_DESSERT;
     }
 

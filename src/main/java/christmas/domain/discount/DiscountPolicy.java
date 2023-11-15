@@ -1,7 +1,8 @@
 package christmas.domain.discount;
 
+import christmas.domain.benefit.BenefitDetail;
 import christmas.domain.order.Order;
 
 public interface DiscountPolicy {
-    int discount(Order order);
+    BenefitDetail applyDiscount(Order order);
 }

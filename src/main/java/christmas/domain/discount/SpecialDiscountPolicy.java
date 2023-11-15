@@ -1,5 +1,6 @@
 package christmas.domain.discount;
 
+import christmas.domain.benefit.BenefitDetail;
 import christmas.domain.order.Order;
 
 import java.util.List;
@@ -11,7 +12,12 @@ public class SpecialDiscountPolicy implements DiscountPolicy {
     private int discountAmount;
 
     @Override
-    public int discount(Order order) {
+    public BenefitDetail applyDiscount(Order order) {
+        int discountAmount = discount(order);
+        return new BenefitDetail("특별 할인", discountAmount);
+    }
+
+    private int discount(Order order) {
         int visitDate = order.getVisitDate().getVisitDate();
         if (specialDay.contains(visitDate)) {
             discountAmount = DISCOUNT_PER_STAR;

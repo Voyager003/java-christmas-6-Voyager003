@@ -1,5 +1,6 @@
 package christmas.domain.discount;
 
+import christmas.domain.benefit.BenefitDetail;
 import christmas.domain.order.Order;
 import christmas.domain.order.date.Week;
 import christmas.domain.menu.MainDish;
@@ -13,7 +14,12 @@ public class WeekendDiscountPolicy implements DiscountPolicy {
     private int mainDishCount;
 
     @Override
-    public int discount(Order order) {
+    public BenefitDetail applyDiscount(Order order) {
+        int discountAmount = discount(order);
+        return new BenefitDetail("주말 할인", discountAmount);
+    }
+
+    private int discount(Order order) {
         if (!isWeekend(order.getVisitDate().getWeek())) {
             return 0;
         }
