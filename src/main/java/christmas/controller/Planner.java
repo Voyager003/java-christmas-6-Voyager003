@@ -3,6 +3,7 @@ package christmas.controller;
 import christmas.config.PlannerConfig;
 import christmas.dao.MenuRepository;
 import christmas.domain.benefit.Benefit;
+import christmas.domain.discount.*;
 import christmas.domain.order.Order;
 import christmas.domain.order.SelectionMenu;
 import christmas.domain.order.date.VisitDate;
@@ -11,8 +12,9 @@ import christmas.service.MenuService;
 import christmas.view.InputView;
 import christmas.view.OutputView;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-
 
 public class Planner {
     public void start() {
@@ -77,7 +79,12 @@ public class Planner {
     }
 
     private Benefit generateBenefit(Order order) {
-        Benefit benefit = new Benefit(order);
+        List<DiscountPolicy> policies =
+                Arrays.asList(new ChristmasDiscountPolicy(),
+                        new WeekdayDiscountPolicy(),
+                        new WeekendDiscountPolicy(),
+                        new SpecialDiscountPolicy());
+        Benefit benefit = new Benefit(order, policies);
         OutputView.printGift(benefit);
         return benefit;
     }
@@ -85,8 +92,7 @@ public class Planner {
     private void printAfterApplyBenefit(Benefit benefit, Order order) {
         OutputView.printBenefitDetail(benefit);
         OutputView.printTotalDetail(benefit);
-        int totalDiscountAmount = benefit.calculateTotalDiscount(order);
-        OutputView.printAfterDiscount(totalDiscountAmount);
+        OutputView.printAfterDiscount(benefit, order);
         OutputView.printEventBadge(benefit);
     }
 }
