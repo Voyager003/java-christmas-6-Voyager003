@@ -26,6 +26,7 @@ public class SelectionMenu {
         validateMenuName(input);
         validateQuantity(input);
         validateDuplicateMenu(input);
+        validateMaximumMenu(input);
     }
 
     private void validateMenuName(String input) {
@@ -51,6 +52,15 @@ public class SelectionMenu {
         long uniqueMenuCount = Arrays.stream(menus).distinct().count();
         if (menus.length != uniqueMenuCount) {
             throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+        }
+    }
+
+    private void validateMaximumMenu(String input) {
+        HashMap<String, Integer> menu = StringConverter.convertToMap(input);
+        int totalCount = menu.values()
+                .stream().mapToInt(Integer::intValue).sum();
+        if (totalCount > 20) {
+            throw new IllegalArgumentException("[ERROR] 메뉴의 총 주문 갯수가 20개를 초과했습니다. 다시 입력해 주세요.");
         }
     }
 

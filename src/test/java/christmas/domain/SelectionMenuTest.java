@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static christmas.domain.menu.Beverage.CHAMPAGNE;
 import static christmas.domain.menu.Beverage.RED_WINE;
+import static christmas.domain.menu.MainDish.SEAFOOD_PASTA;
 import static org.assertj.core.api.Assertions.*;
 
 
@@ -27,6 +28,7 @@ class SelectionMenuTest {
         // 메뉴에 샴페인과 레드와인을 추가한다.
         menuRepository.saveMenu(CHAMPAGNE);
         menuRepository.saveMenu(RED_WINE);
+        menuRepository.saveMenu(SEAFOOD_PASTA);
     }
 
     @Test
@@ -103,5 +105,20 @@ class SelectionMenuTest {
         assertThatThrownBy(() -> new SelectionMenu(input))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+    }
+
+    @Test
+    @DisplayName("메뉴의 갯수가 20개를 초과한다면, 예외가 발생한다.")
+    void validateMaximumMenu_exception() {
+        /**
+         * given : 해산물파스타 22개를 주문한다.
+         * when : 입력한 메뉴를 선택 메뉴에 저장한다.
+         * then : 중복된 메뉴 입력으로 예외가 발생한다.
+         */
+        String input = "샴페인-3,해산물파스타-20";
+
+        assertThatThrownBy(() -> new SelectionMenu(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[ERROR] 메뉴의 총 주문 갯수가 20개를 초과했습니다. 다시 입력해 주세요.");
     }
 }
