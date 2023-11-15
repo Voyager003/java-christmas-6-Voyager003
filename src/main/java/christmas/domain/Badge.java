@@ -14,6 +14,10 @@ public enum Badge {
         this.price = price;
     }
 
+    public boolean isPriceGreaterOrEqual(int price) {
+        return this.price <= price;
+    }
+
     public int getPrice() {
         return price;
     }

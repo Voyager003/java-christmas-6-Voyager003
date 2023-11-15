@@ -1,11 +1,14 @@
 package christmas.domain;
 
+
 import christmas.discount.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static christmas.domain.menu.Beverage.CHAMPAGNE;
+import static java.util.Comparator.comparing;
 
 public class Benefit {
     private static final int GIFT_EVENT_AMOUNT = 120_000;
@@ -48,17 +51,12 @@ public class Benefit {
     }
 
     private Badge grantBadge() {
-        int benefitAmount = getTotalBenefitAmount();
-        if (benefitAmount >= Badge.SANTA.getPrice()) {
-            return Badge.SANTA;
-        }
-        if (benefitAmount >= Badge.TREE.getPrice()) {
-            return Badge.TREE;
-        }
-        if (benefitAmount >= Badge.STAR.getPrice()) {
-            return Badge.STAR;
-        }
-        return Badge.NONE;
+        int totalBenefitAmount = getTotalBenefitAmount();
+        return Arrays.stream(Badge.values())
+                .sorted(comparing(Badge::getPrice).reversed())
+                .filter(badge -> badge.isPriceGreaterOrEqual(totalBenefitAmount))
+                .findFirst()
+                .orElse(Badge.NONE);
     }
 
     private int getChristmasDiscount(Order order) {
