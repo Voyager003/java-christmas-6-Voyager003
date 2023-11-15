@@ -27,8 +27,4 @@ public class MenuRepository {
     public Map<String, Menu> getMenu() {
         return menu;
     }
-
-    public boolean exists(String menuName) {
-        return menu.containsKey(menuName);
-    }
 }
